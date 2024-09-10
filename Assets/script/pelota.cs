@@ -8,6 +8,7 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 public class pelota : MonoBehaviour
 {
     [SerializeField] private Vector2 initialVelocity;
+    [SerializeField] private float velocityMultiplayer;
 
     private Rigidbody2D pelotaRb;
     private bool ispelotaMoving;
@@ -18,7 +19,7 @@ public class pelota : MonoBehaviour
         pelotaRb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && !ispelotaMoving)
@@ -26,23 +27,28 @@ public class pelota : MonoBehaviour
             Launch();
         }
     }
+         
 
+    
     private void Launch()
     {
         transform.parent = null;
         pelotaRb.velocity = initialVelocity;
         ispelotaMoving = true;
-
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("ladrillo")) 
+        if (collision.gameObject.CompareTag("ladrillo"))
         {
             Destroy(collision.gameObject);
+            pelotaRb.velocity *= velocityMultiplayer;
 
             GameManager.Instance.ladrilloDestroyed();
         }
+
     }
+
+
+
 }

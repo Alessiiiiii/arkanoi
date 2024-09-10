@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Jobs;
+using UnityEngine.WSA;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class pelota : MonoBehaviour
 {
@@ -13,17 +15,34 @@ public class pelota : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pelotaRb=GetComponent<Rigidbody2D>();
+        pelotaRb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)&& !ispelotaMoving)
+        if (Input.GetKeyDown(KeyCode.Space) && !ispelotaMoving)
         {
-            transform.parent=null;
-            pelotaRb.velocity = initialVelocity;
-            ispelotaMoving=true;
+            Launch();
+        }
+    }
+
+    private void Launch()
+    {
+        transform.parent = null;
+        pelotaRb.velocity = initialVelocity;
+        ispelotaMoving = true;
+
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("ladrillo")) 
+        {
+            Destroy(collision.gameObject);
+
+            GameManager.Instance.ladrilloDestroyed();
         }
     }
 }
